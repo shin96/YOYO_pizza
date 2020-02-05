@@ -18,7 +18,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
  
   function welcome(agent) {
-    agent.add(`Welcome to YOYO's Pizza!\n what pizza you would like to order?\nveg or non-veg?`);
+    agent.add(`Welcome to YOYO's Pizza!\nwhat pizza you would like to order?\nveg or non-veg?`);
   }
  
   function fallback(agent) {
@@ -26,16 +26,19 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(`I'm sorry, can you try again?`);
   }
 
-//   function findMyOrder(agent) {
-//     orderId = agent.parameters.orderId;
-//     const now = new Date().valueOf();
-//     if (((now - orderId)/ 60000) > 30){
-//         agent.add(`your order is on your way`);
-//     } 
-//     else{
-//         agent.add(`your order has been delivered`);
-//     } 
-//   }
+  function findMyOrder(agent) {
+    console.log("inside findMyOrder ........ ");
+    var orderId = agent.parameters.orderId;
+    const now = new Date().valueOf();
+    console.log("##### "+ orderId);
+    console.log("##### "+ ((now - orderId)/ 60000));
+    if (((now - orderId)/ 60000) > 30){
+        agent.add(`your order is delivered`);
+    } 
+    else{
+        agent.add(`your order is on your way`);
+    } 
+  }
     function addorder(agent){
     const pizzatype = agent.parameters.type;
     const pizzasize = agent.parameters.size;
@@ -44,7 +47,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     const customerphone = agent.parameters.phonenumber;
     const customeraddress = agent.parameters.address;
     const orderId = new Date().valueOf();
-    agent.add(`thanks ` + customername + `! your order ` + orderId + `has been placed`);
+    agent.add(`thanks ` + customername + `! your order ` + orderId + ` has been placed`);
     return admin.database().ref('/PizzaOrder').set({
       	pizzatype: pizzatype,
       	pizzasize: pizzasize,
@@ -60,6 +63,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('Order', addorder);
   intentMap.set('welcome', welcome);
-//   intentMap.set('findMyOrder', findMyOrder);
+  intentMap.set('findMyOrder', findMyOrder);
   agent.handleRequest(intentMap);
 });
