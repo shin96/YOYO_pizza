@@ -7,7 +7,7 @@ const {Card, Suggestion} = require('dialogflow-fulfillment');
 
 admin.initializeApp({
 	credential: admin.credential.applicationDefault(),
-  	databaseURL: 'https://yoyo-pizza-stqvdg.firebaseio.com/'
+  	databaseURL: '<your firebase database URL>'
 });
 
 process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
